@@ -1,0 +1,22 @@
+{# codegen_templates/signals.j2 #}
+import logging
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from .models import {{ model_name }}
+
+logger = logging.getLogger(__name__)
+
+
+@receiver(post_save, sender={{ model_name }})
+def {{ model_name|lower }}_post_save(sender, instance, created, **kwargs):
+    """Handle post-save signal for {{ model_name }}."""
+    if created:
+        logger.info("{{ model_name }} created: %s", instance)
+    else:
+        logger.info("{{ model_name }} updated: %s", instance)
+
+
+@receiver(post_delete, sender={{ model_name }})
+def {{ model_name|lower }}_post_delete(sender, instance, **kwargs):
+    """Handle post-delete signal for {{ model_name }}."""
+    logger.info("{{ model_name }} deleted: %s", instance)

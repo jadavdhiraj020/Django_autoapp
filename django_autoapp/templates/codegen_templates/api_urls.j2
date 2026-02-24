@@ -1,0 +1,11 @@
+{# codegen_templates/api_urls.j2 #}
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .viewsets import {{ model_name }}ViewSet
+
+router = DefaultRouter()
+router.register(r'{{ model_name|lower }}s', {{ model_name }}ViewSet, basename='{{ model_name|lower }}')
+
+urlpatterns = [
+    path('', include(router.urls)),
+]

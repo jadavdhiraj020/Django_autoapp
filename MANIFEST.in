@@ -1,0 +1,3 @@
+recursive-include django_autoapp/templates *.j2
+include README.md
+include LICENSE

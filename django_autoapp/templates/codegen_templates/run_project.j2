@@ -1,0 +1,33 @@
+from django.core.management.base import BaseCommand
+from django.core.management import call_command
+from django.contrib.auth import get_user_model
+
+class Command(BaseCommand):
+    help = 'Run project with one command (makemigrations, migrate, runserver)'
+
+    def handle(self, *args, **kwargs):
+        User = get_user_model()
+
+        if not User.objects.filter(is_superuser=True).exists():
+            self.stdout.write(self.style.SUCCESS('No admin found. Creating superuser...'))
+            call_command('createsuperuser')  # Creates superuser interactively
+
+            # Ensure the newly created superuser has is_staff=True
+            superuser = User.objects.get(is_superuser=True)
+            if not superuser.is_staff:
+                superuser.is_staff = True
+                superuser.is_active = True
+                superuser.save()
+                self.stdout.write(self.style.SUCCESS('Superuser updated with is_staff=True'))
+
+        else:
+            self.stdout.write(self.style.SUCCESS('Admin already exists. Skipping superuser creation.'))
+
+        self.stdout.write(self.style.SUCCESS('Running makemigrations...'))
+        call_command('makemigrations')
+
+        self.stdout.write(self.style.SUCCESS('Running migrations...'))
+        call_command('migrate')
+
+        self.stdout.write(self.style.SUCCESS('Starting the server...'))
+        call_command('runserver')

@@ -1,0 +1,12 @@
+{# codegen_templates/serializers.j2 #}
+from rest_framework import serializers
+from .models import {{ model_name }}
+
+
+class {{ model_name }}Serializer(serializers.ModelSerializer):
+    """Serializer for the {{ model_name }} model."""
+
+    class Meta:
+        model = {{ model_name }}
+        fields = '__all__'
+        read_only_fields = ['created_at', 'updated_at']

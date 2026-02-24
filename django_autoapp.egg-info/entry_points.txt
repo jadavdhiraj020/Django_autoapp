@@ -1,0 +1,2 @@
+[console_scripts]
+django-autoapp-init = django_autoapp.cli:main

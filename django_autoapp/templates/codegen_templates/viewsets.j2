@@ -1,0 +1,16 @@
+{# codegen_templates/viewsets.j2 #}
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .models import {{ model_name }}
+from .serializers import {{ model_name }}Serializer
+
+
+class {{ model_name }}ViewSet(viewsets.ModelViewSet):
+    """API ViewSet for {{ model_name }} CRUD operations.
+
+    Provides list, create, retrieve, update, and delete actions.
+    """
+
+    queryset = {{ model_name }}.objects.all()
+    serializer_class = {{ model_name }}Serializer
+    permission_classes = [IsAuthenticatedOrReadOnly]

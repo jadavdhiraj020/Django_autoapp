@@ -1,0 +1,59 @@
+{# codegen_templates/tests.j2 #}
+from django.test import TestCase, Client
+from django.urls import reverse
+from .models import {{ model_name }}
+
+
+class {{ model_name }}ModelTest(TestCase):
+    """Unit tests for the {{ model_name }} model."""
+
+    def setUp(self):
+        self.instance = {{ model_name }}.objects.create(name="Test {{ model_name }}")
+
+    def test_str_representation(self):
+        """Test the string representation of {{ model_name }}."""
+        self.assertEqual(str(self.instance), "Test {{ model_name }}")
+
+    def test_create(self):
+        """Test creating a {{ model_name }} instance."""
+        self.assertIsNotNone(self.instance.pk)
+        self.assertEqual(self.instance.name, "Test {{ model_name }}")
+
+    def test_update(self):
+        """Test updating a {{ model_name }} instance."""
+        self.instance.name = "Updated {{ model_name }}"
+        self.instance.save()
+        self.instance.refresh_from_db()
+        self.assertEqual(self.instance.name, "Updated {{ model_name }}")
+
+    def test_delete(self):
+        """Test deleting a {{ model_name }} instance."""
+        pk = self.instance.pk
+        self.instance.delete()
+        self.assertFalse({{ model_name }}.objects.filter(pk=pk).exists())
+
+
+class {{ model_name }}ViewTest(TestCase):
+    """Integration tests for {{ model_name }} views."""
+
+    def setUp(self):
+        self.client = Client()
+        self.instance = {{ model_name }}.objects.create(name="View Test {{ model_name }}")
+
+    def test_list_view(self):
+        """Test the list view returns 200."""
+        url = reverse('{{ app_name }}:{{ model_name|lower }}_list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_get(self):
+        """Test the create view GET returns 200."""
+        url = reverse('{{ app_name }}:{{ model_name|lower }}_create')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_detail_view(self):
+        """Test the detail view returns 200."""
+        url = reverse('{{ app_name }}:{{ model_name|lower }}_detail', args=[self.instance.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

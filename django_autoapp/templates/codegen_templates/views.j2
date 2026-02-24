@@ -1,0 +1,29 @@
+{# codegen_templates/views.j2 #}
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from .models import {{ model_name }}
+from django.urls import reverse_lazy
+
+class {{ model_name }}ListView(ListView):
+    model = {{ model_name }}
+    template_name = '{{ app_name }}/{{ model_name|lower }}_list.html'
+
+class {{ model_name }}CreateView(CreateView):
+    model = {{ model_name }}
+    fields = '__all__'
+    template_name = '{{ app_name }}/{{ model_name|lower }}_form.html'
+    success_url = reverse_lazy('{{ app_name }}:{{ model_name|lower }}_list')
+
+class {{ model_name }}DetailView(DetailView):
+    model = {{ model_name }}
+    template_name = '{{ app_name }}/{{ model_name|lower }}_detail.html'
+
+class {{ model_name }}UpdateView(UpdateView):
+    model = {{ model_name }}
+    fields = '__all__'
+    template_name = '{{ app_name }}/{{ model_name|lower }}_form.html'
+    success_url = reverse_lazy('{{ app_name }}:{{ model_name|lower }}_list')
+
+class {{ model_name }}DeleteView(DeleteView):
+    model = {{ model_name }}
+    template_name = '{{ app_name }}/{{ model_name|lower }}_confirm_delete.html'
+    success_url = reverse_lazy('{{ app_name }}:{{ model_name|lower }}_list')
